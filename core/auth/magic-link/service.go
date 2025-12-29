@@ -73,7 +73,7 @@ func sendTokenEmail(to string, token string) error {
 	auth_link := os.Getenv("APP_DOMAIN") + "/auth?token=" + token
 
 	log.Println("Sending token email to:", to, "with token:", auth_link)
-	err := email.SendEmailSys(to, "Your Magic Login Link", "Click the following link to log in: \n" + auth_link)
+	err := email.SendEmailSys(to, "Your Login Link", "Click the following link to log in: \n" + auth_link)
 
 	if err != nil {
 		log.Println("Error sending email:", err)
