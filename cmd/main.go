@@ -8,9 +8,10 @@ import (
 	"time"
 
 	core "github.com/Mboukhal/FactoryBase/core"
+	sqlc "github.com/Mboukhal/FactoryBase/internal/db"
 	"github.com/Mboukhal/FactoryBase/internal/settings"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -31,14 +32,16 @@ func main() {
 	if errenv != nil {
 		fmt.Println("Error loading .env file")
 	}
+
 	db, err := settings.OpenDB()
 	if err != nil {
 		panic("Failed to connect to the database:" + err.Error())
 	}
 	defer db.Close()
 
-	// insert useing sqlc in db for testing
-	// queries := New(db)
+	// Create queries instance
+	queries := sqlc.New(db)
+
 
 	// // insert a test user
 	// _, err = queries.CreateProfile(ctx, CreateProfileParams{
@@ -56,15 +59,18 @@ func main() {
 	r := chi.NewRouter()
 
 	// A good base middleware stack
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	// r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
+	r.Use(chimiddleware.RequestID)
+	r.Use(chimiddleware.RealIP)
+	// r.Use(chimiddleware.Logger)
+	r.Use(chimiddleware.Recoverer)
+
+	// Inject queries into context
+	r.Use(settings.WithQueries(queries))
 
 	// Set a timeout value on the request context (ctx), that will signal
 	// through ctx.Done() that the request has timed out and further
 	// processing should be stopped.
-	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(chimiddleware.Timeout(60 * time.Second))
 
 	isProduction := app_env == "production"
 	if isProduction {

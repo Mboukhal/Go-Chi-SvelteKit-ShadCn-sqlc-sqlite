@@ -3,188 +3,68 @@
 //   sqlc v1.30.0
 // source: auth.sql
 
-package db
+package sqlc
 
 import (
 	"context"
 	"database/sql"
 )
 
-const cleanupExpiredRevokedTokens = `-- name: CleanupExpiredRevokedTokens :execrows
-DELETE FROM revoked_tokens
-WHERE expires_at IS NOT NULL AND expires_at <= CURRENT_TIMESTAMP
+const createToken = `-- name: CreateToken :one
+INSERT INTO loginpl (email)
+VALUES (?)
+RETURNING id
 `
 
-func (q *Queries) CleanupExpiredRevokedTokens(ctx context.Context) (int64, error) {
-	result, err := q.db.ExecContext(ctx, cleanupExpiredRevokedTokens)
-	if err != nil {
-		return 0, err
-	}
-	return result.RowsAffected()
+func (q *Queries) CreateToken(ctx context.Context, email string) (string, error) {
+	row := q.db.QueryRowContext(ctx, createToken, email)
+	var id string
+	err := row.Scan(&id)
+	return id, err
 }
 
-const createSession = `-- name: CreateSession :one
-
-INSERT INTO sessions (user_id, refresh_token, expires_at)
-VALUES (?, ?, ?)
-RETURNING id, user_id, refresh_token, created_at, expires_at
+const deleteTokenByEmail = `-- name: DeleteTokenByEmail :exec
+DELETE FROM loginpl
+WHERE email = ?
 `
 
-type CreateSessionParams struct {
-	UserID       sql.NullString `json:"user_id"`
-	RefreshToken sql.NullString `json:"refresh_token"`
-	ExpiresAt    sql.NullTime   `json:"expires_at"`
-}
-
-// Session management
-func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
-	row := q.db.QueryRowContext(ctx, createSession, arg.UserID, arg.RefreshToken, arg.ExpiresAt)
-	var i Session
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.RefreshToken,
-		&i.CreatedAt,
-		&i.ExpiresAt,
-	)
-	return i, err
-}
-
-const deleteSessionByID = `-- name: DeleteSessionByID :exec
-DELETE FROM sessions
-WHERE id = ?
-`
-
-func (q *Queries) DeleteSessionByID(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteSessionByID, id)
+func (q *Queries) DeleteTokenByEmail(ctx context.Context, email string) error {
+	_, err := q.db.ExecContext(ctx, deleteTokenByEmail, email)
 	return err
 }
 
-const getSessionByID = `-- name: GetSessionByID :one
-SELECT id, user_id, refresh_token, created_at, expires_at
-FROM sessions
-WHERE id = ?
-`
+const getTokenByEmail = `-- name: GetTokenByEmail :one
 
-func (q *Queries) GetSessionByID(ctx context.Context, id int64) (Session, error) {
-	row := q.db.QueryRowContext(ctx, getSessionByID, id)
-	var i Session
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.RefreshToken,
-		&i.CreatedAt,
-		&i.ExpiresAt,
-	)
-	return i, err
-}
 
-const getSessionByRefreshToken = `-- name: GetSessionByRefreshToken :one
-SELECT id, user_id, refresh_token, created_at, expires_at
-FROM sessions
-WHERE refresh_token = ?
+SELECT id, counter_request, created_at
+FROM loginpl
+WHERE email = ?
 LIMIT 1
 `
 
-func (q *Queries) GetSessionByRefreshToken(ctx context.Context, refreshToken sql.NullString) (Session, error) {
-	row := q.db.QueryRowContext(ctx, getSessionByRefreshToken, refreshToken)
-	var i Session
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.RefreshToken,
-		&i.CreatedAt,
-		&i.ExpiresAt,
-	)
+type GetTokenByEmailRow struct {
+	ID             string       `json:"id"`
+	CounterRequest int64        `json:"counter_request"`
+	CreatedAt      sql.NullTime `json:"created_at"`
+}
+
+// Session management
+func (q *Queries) GetTokenByEmail(ctx context.Context, email string) (GetTokenByEmailRow, error) {
+	row := q.db.QueryRowContext(ctx, getTokenByEmail, email)
+	var i GetTokenByEmailRow
+	err := row.Scan(&i.ID, &i.CounterRequest, &i.CreatedAt)
 	return i, err
 }
 
-const isTokenRevoked = `-- name: IsTokenRevoked :one
-SELECT EXISTS (
-    SELECT 1 FROM revoked_tokens WHERE jti = ?
-) AS revoked
+const updateTokenCount = `-- name: UpdateTokenCount :one
+UPDATE loginpl SET counter_request = counter_request + 1    
+WHERE email = ?
+RETURNING id
 `
 
-func (q *Queries) IsTokenRevoked(ctx context.Context, jti sql.NullString) (int64, error) {
-	row := q.db.QueryRowContext(ctx, isTokenRevoked, jti)
-	var revoked int64
-	err := row.Scan(&revoked)
-	return revoked, err
-}
-
-const listSessionsByUserID = `-- name: ListSessionsByUserID :many
-SELECT id, user_id, refresh_token, created_at, expires_at
-FROM sessions
-WHERE user_id = ?
-ORDER BY created_at DESC
-`
-
-func (q *Queries) ListSessionsByUserID(ctx context.Context, userID sql.NullString) ([]Session, error) {
-	rows, err := q.db.QueryContext(ctx, listSessionsByUserID, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Session
-	for rows.Next() {
-		var i Session
-		if err := rows.Scan(
-			&i.ID,
-			&i.UserID,
-			&i.RefreshToken,
-			&i.CreatedAt,
-			&i.ExpiresAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const purgeExpiredSessions = `-- name: PurgeExpiredSessions :execrows
-DELETE FROM sessions
-WHERE expires_at IS NOT NULL AND expires_at <= CURRENT_TIMESTAMP
-`
-
-func (q *Queries) PurgeExpiredSessions(ctx context.Context) (int64, error) {
-	result, err := q.db.ExecContext(ctx, purgeExpiredSessions)
-	if err != nil {
-		return 0, err
-	}
-	return result.RowsAffected()
-}
-
-const revokeToken = `-- name: RevokeToken :one
-
-INSERT INTO revoked_tokens (jti, expires_at)
-VALUES (?, ?)
-ON CONFLICT(jti) DO UPDATE
-SET revoked_at = CURRENT_TIMESTAMP,
-    expires_at = EXCLUDED.expires_at
-RETURNING id, jti, revoked_at, expires_at
-`
-
-type RevokeTokenParams struct {
-	Jti       sql.NullString `json:"jti"`
-	ExpiresAt sql.NullTime   `json:"expires_at"`
-}
-
-// Revoked token management
-func (q *Queries) RevokeToken(ctx context.Context, arg RevokeTokenParams) (RevokedToken, error) {
-	row := q.db.QueryRowContext(ctx, revokeToken, arg.Jti, arg.ExpiresAt)
-	var i RevokedToken
-	err := row.Scan(
-		&i.ID,
-		&i.Jti,
-		&i.RevokedAt,
-		&i.ExpiresAt,
-	)
-	return i, err
+func (q *Queries) UpdateTokenCount(ctx context.Context, email string) (string, error) {
+	row := q.db.QueryRowContext(ctx, updateTokenCount, email)
+	var id string
+	err := row.Scan(&id)
+	return id, err
 }

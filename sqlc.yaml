@@ -5,7 +5,7 @@ sql:
     schema: "./internal/adapter/db/schema"
     gen:
       go:
-        package: "db"
+        package: "sqlc"
         out: "./internal/db"
         sql_package: "database/sql"
         emit_interface: true

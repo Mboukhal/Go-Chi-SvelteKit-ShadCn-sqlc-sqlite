@@ -2,12 +2,19 @@
 // versions:
 //   sqlc v1.30.0
 
-package db
+package sqlc
 
 import (
 	"database/sql"
 	"time"
 )
+
+type Loginpl struct {
+	ID             string       `json:"id"`
+	Email          string       `json:"email"`
+	CounterRequest int64        `json:"counter_request"`
+	CreatedAt      sql.NullTime `json:"created_at"`
+}
 
 type Organization struct {
 	ID                     string         `json:"id"`

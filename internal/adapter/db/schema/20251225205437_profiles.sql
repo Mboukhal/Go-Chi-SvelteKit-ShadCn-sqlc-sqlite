@@ -2,10 +2,10 @@
 -- +goose StatementBegin
 
 CREATE TABLE profiles (
-    id TEXT PRIMARY KEY,
+    id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))) UNIQUE NOT NULL,
     username VARCHAR(50) UNIQUE,
     phone VARCHAR(15) UNIQUE,
-    email TEXT UNIQUE,
+    email TEXT UNIQUE NOT NULL,
     role TEXT DEFAULT 'USER' NOT NULL CHECK(role IN ('ADMIN', 'USER', 'ORGANIZATION', 'ECOSYSTEM', 'EVALUATOR', 'BANNED', 'UNKNOWN')),
     -- organization association
     organization_id TEXT,
@@ -14,10 +14,10 @@ CREATE TABLE profiles (
 );
 
 -- insert default users
-INSERT INTO profiles (id, username, phone, email, role) VALUES
-(lower(hex(randomblob(16))), NULL, NULL, 'lios80466@gmail.com', 'ADMIN'),
-(lower(hex(randomblob(16))), NULL, NULL, 'hami.doc2@gmail.com', 'USER'),
-(lower(hex(randomblob(16))), NULL, NULL, 'hmamazeinab@gmail.com', 'ADMIN');
+INSERT INTO profiles (email, role) VALUES
+('lios80466@gmail.com', 'ADMIN'),
+('hami.doc2@gmail.com', 'USER'),
+('hmamazeinab@gmail.com', 'ADMIN');
 -- +goose StatementEnd
 
 -- +goose Down

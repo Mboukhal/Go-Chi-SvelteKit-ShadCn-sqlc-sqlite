@@ -16,7 +16,7 @@ ui:
 	## Start Bun development server for UI
 	cd ./cmd/ui && bun run dev && cd -
 
-dev:
+dev: gen
 	## Start development server with hot reload
 	@$(MAKE) -j ui server
 
@@ -24,8 +24,9 @@ test:
 	## Run tests with coverage
 	find ./apps -name '*_test.go' | xargs -n1 -I{} sh -c 'dir=$$(dirname "{}"); go test "$$dir" -v'
 
+# 	rm -rf internal/db
 gen:
-	## Generate code (e.g., mocks, clients)
+	## Generate database code with sqlc
 	sqlc generate
 
 # -------- Installations --------

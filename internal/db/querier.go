@@ -2,35 +2,20 @@
 // versions:
 //   sqlc v1.30.0
 
-package db
+package sqlc
 
 import (
 	"context"
-	"database/sql"
 )
 
 type Querier interface {
-	CleanupExpiredRevokedTokens(ctx context.Context) (int64, error)
 	// Profile management
-	CreateProfile(ctx context.Context, arg CreateProfileParams) (CreateProfileRow, error)
+	CheckUserEmailExists(ctx context.Context, email string) (int64, error)
+	CreateToken(ctx context.Context, email string) (string, error)
+	DeleteTokenByEmail(ctx context.Context, email string) error
 	// Session management
-	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
-	DeleteProfileByID(ctx context.Context, id string) error
-	DeleteSessionByID(ctx context.Context, id int64) error
-	GetProfileByEmail(ctx context.Context, email string) (GetProfileByEmailRow, error)
-	GetProfileByID(ctx context.Context, id string) (GetProfileByIDRow, error)
-	GetProfileByPhone(ctx context.Context, phone sql.NullString) (GetProfileByPhoneRow, error)
-	GetProfileByUsername(ctx context.Context, username sql.NullString) (GetProfileByUsernameRow, error)
-	GetSessionByID(ctx context.Context, id int64) (Session, error)
-	GetSessionByRefreshToken(ctx context.Context, refreshToken sql.NullString) (Session, error)
-	IsTokenRevoked(ctx context.Context, jti sql.NullString) (int64, error)
-	ListProfilesByRole(ctx context.Context, role string) ([]ListProfilesByRoleRow, error)
-	ListSessionsByUserID(ctx context.Context, userID sql.NullString) ([]Session, error)
-	PurgeExpiredSessions(ctx context.Context) (int64, error)
-	// Revoked token management
-	RevokeToken(ctx context.Context, arg RevokeTokenParams) (RevokedToken, error)
-	UpdateProfile(ctx context.Context, arg UpdateProfileParams) (UpdateProfileRow, error)
-	UpdateProfileRole(ctx context.Context, arg UpdateProfileRoleParams) (UpdateProfileRoleRow, error)
+	GetTokenByEmail(ctx context.Context, email string) (GetTokenByEmailRow, error)
+	UpdateTokenCount(ctx context.Context, email string) (string, error)
 }
 
 var _ Querier = (*Queries)(nil)
