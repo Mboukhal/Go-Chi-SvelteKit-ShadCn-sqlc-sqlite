@@ -1,0 +1,8 @@
+.vscode
+.env
+**/node_modules
+dist
+ui/build
+services
+tmp
+_ui

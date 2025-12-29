@@ -1,0 +1,28 @@
+{
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "go.diagnostic.vulncheck": "Off",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "chat.mcp.serverSampling": {
+    "FactoryBase/.vscode/mcp.json: svelte": {
+      "allowedModels": ["copilot/auto"]
+    }
+  },
+  "makefile.configureOnOpen": true
+}

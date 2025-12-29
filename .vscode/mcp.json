@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "svelte": {
+      "command": "npx",
+      "args": ["-y", "@sveltejs/mcp"]
+    },
+    "goreleaser": {
+      "command": "goreleaser-mcp",
+      "type": "stdio"
+    }
+  }
+}
