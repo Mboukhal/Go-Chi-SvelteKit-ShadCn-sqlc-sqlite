@@ -14,7 +14,7 @@ Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKi
 
 - **Go** (API)
 - **Chi** (router)
-- **sqlc** (generate Go DB code from SQL) :contentReference[oaicite:0]{index=0}
+- **sqlc** (generate Go DB code from SQL)
 - **SQLite** (embedded DB)
 - **SvelteKit** (web UI)
 - **TailwindCSS + ShadCN UI**
@@ -25,15 +25,17 @@ Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKi
 
 Start backend + frontend dev servers with hot reload, frontend at `localhost:1337` but proxied through backend at `localhost:3000`.
 
-sh
+```
 make install
 make
+```
 
 ## 🐳 Deploy With Docker
 
-sh
+```
 make build_prod
 make docker_start
+```
 
 ## ⚙️ Env
 
