@@ -1,42 +1,73 @@
+Here’s a **good README** for your **Go-Chi + SvelteKit + ShadCN + sqlc + SQLite** project:
 
-# Todo List
+````md
+# Go-Chi + Air + SvelteKit + ShadCN + sqlc + SQLite🥰
 
-- [X] Set-Up ui `SvelteKit As Static` and server `GoLang Chi` 
-- [X] Set-Up Basic UI with SvelteKit using TailwindCSS ShadcnUI 
-- [X] Set-Up Basic Server with GoLang using Chi
-- [X] Add Services for Database and Cache
-- [X] Set-Up Build and Dev Using Task 
-- [X] Add Goose and Sqlc for database
-- [ ] Set-Up Queries to main project
-- [ ] Start Working on Authentication `UserName/Password` and `OAuth2`
-- [ ] Set-Up Middleware for Logging, CORS, Authentication, and more
-- [ ] Add Basic Routes for User Management
-- [ ] Add Testing for Handlers and Services
+Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKit frontend** with **ShadCN UI + TailwindCSS**.
 
+## 🚀 Features
 
-# FactoryBase
+- Go API using **Chi router**
+- Type-safe DB with **sqlc** (SQLite)
+- Frontend with **SvelteKit as static + TailwindCSS + ShadCN UI**
+- Single binary backend + frontend dev proxy
+- Docker & Makefile for easy setup
 
-FactoryBase is a boilerplate project for building web applications using GoLang for the backend and SvelteKit for the frontend. It provides a solid foundation with essential features like database integration, caching, and environment configuration to help developers kickstart their projects quickly.
+## 🧱 Stack
 
-## Features
+- **Go** (API)
+- **Chi** (router)
+- **sqlc** (generate Go DB code from SQL) :contentReference[oaicite:0]{index=0}
+- **SQLite** (embedded DB)
+- **SvelteKit** (web UI)
+- **TailwindCSS + ShadCN UI**
 
-- GoLang backend with Chi router
-- SvelteKit frontend with TailwindCSS and ShadcnUI
-- PostgreSQL database integration using Goose and Sqlc
-- Redis caching support
-- Environment variable management with godotenv
-- Taskfile for build and development automation
-- Modular project structure for scalability
+## 📥 Setup
 
-## Getting Started
+### Dev
 
-### Prerequisites
-- GoLang
-- Node.js
-- PostgreSQL
-- Redis
+Start backend + frontend dev servers with hot reload, frontend at `localhost:5173` but proxied through backend at `localhost:3000`.
 
-### Updates
+```sh
+make install
+make
+```
 
-- Clone the go.mod
-- add Dockerfile for production 
+## 🐳 Deploy With Docker
+
+```sh
+make build_prod
+make docker_start
+```
+
+## ⚙️ Env
+
+Copy and fill:
+
+```
+.env.example → .env
+```
+
+## 📁 Structure
+
+```
+/cmd        # go app
+/cmd/ui     # SvelteKit UI
+/core       # business logic
+/internal   # handlers, services
+/sqlc.yaml  # sqlc config
+```
+
+## 🎯 Usage
+
+- Build API in Go with type safety using sqlc
+- UI in SvelteKit using ShadCN components
+
+## 🤝 Contribute
+
+PRs/issues welcome.
+
+## 📜 License
+
+MIT
+````

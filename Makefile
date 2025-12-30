@@ -32,6 +32,8 @@ gen:
 # -------- Installations --------
 install:
 	## Install server and ui dependencies
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+	go install github.com/air-verse/air@latest
 	go mod tidy
 	cd ./cmd/ui && bun install && cd -
 
