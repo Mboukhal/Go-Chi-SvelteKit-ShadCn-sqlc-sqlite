@@ -1,4 +1,4 @@
-# Go-Chi + Air + SvelteKit + ShadCN + sqlc + SQLite🥰
+# Go-Chi + Air + SvelteKit + ShadCN + sqlc + SQLite 🥰
 
 Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKit frontend** with **ShadCN UI + TailwindCSS**.
 
@@ -21,7 +21,7 @@ Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKi
 
 ## 📥 Setup
 
-### Dev
+### ⛏️ Dev
 
 Start backend + frontend dev servers with hot reload, frontend at `localhost:1337` but proxied through backend at `localhost:3000`.
 
