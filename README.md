@@ -1,6 +1,3 @@
-Here’s a **good README** for your **Go-Chi + SvelteKit + ShadCN + sqlc + SQLite** project:
-
-````md
 # Go-Chi + Air + SvelteKit + ShadCN + sqlc + SQLite🥰
 
 Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKit frontend** with **ShadCN UI + TailwindCSS**.
@@ -28,35 +25,29 @@ Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKi
 
 Start backend + frontend dev servers with hot reload, frontend at `localhost:5173` but proxied through backend at `localhost:3000`.
 
-```sh
+sh
 make install
 make
-```
 
 ## 🐳 Deploy With Docker
 
-```sh
+sh
 make build_prod
 make docker_start
-```
 
 ## ⚙️ Env
 
 Copy and fill:
 
-```
 .env.example → .env
-```
 
 ## 📁 Structure
 
-```
-/cmd        # go app
-/cmd/ui     # SvelteKit UI
-/core       # business logic
-/internal   # handlers, services
-/sqlc.yaml  # sqlc config
-```
+/cmd # go app
+/cmd/ui # SvelteKit UI
+/core # business logic
+/internal # handlers, services
+/sqlc.yaml # sqlc config
 
 ## 🎯 Usage
 
@@ -70,4 +61,3 @@ PRs/issues welcome.
 ## 📜 License
 
 MIT
-````
