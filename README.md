@@ -23,7 +23,7 @@ Full-stack starter combining **Go backend (Chi + sqlc + SQLite)** and **SvelteKi
 
 ### Dev
 
-Start backend + frontend dev servers with hot reload, frontend at `localhost:5173` but proxied through backend at `localhost:3000`.
+Start backend + frontend dev servers with hot reload, frontend at `localhost:1337` but proxied through backend at `localhost:3000`.
 
 sh
 make install
