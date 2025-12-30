@@ -44,9 +44,13 @@ Copy and fill:
 ## 📁 Structure
 
 /cmd # go app
+
 /cmd/ui # SvelteKit UI
+
 /core # business logic
+
 /internal # handlers, services
+
 /sqlc.yaml # sqlc config
 
 ## 🎯 Usage
