@@ -17,7 +17,7 @@ CREATE TABLE sessions (
 CREATE TABLE IF NOT EXISTS loginpl (
     id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(32)))) UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    counter_request INTEGER DEFAULT 1 NOT NULL,
+    password_hash TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

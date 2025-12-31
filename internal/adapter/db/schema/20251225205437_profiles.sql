@@ -14,10 +14,7 @@ CREATE TABLE profiles (
 );
 
 -- insert default users
-INSERT INTO profiles (email, role) VALUES
-('lios80466@gmail.com', 'ADMIN'),
-('hami.doc2@gmail.com', 'USER'),
-('hmamazeinab@gmail.com', 'ADMIN');
+INSERT INTO profiles (email, role) VALUES ('lios80466@gmail.com', 'ADMIN');
 -- +goose StatementEnd
 
 -- +goose Down

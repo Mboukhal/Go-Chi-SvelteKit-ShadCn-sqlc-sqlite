@@ -6,26 +6,13 @@ package sqlc
 
 import (
 	"database/sql"
-	"time"
 )
 
 type Loginpl struct {
-	ID             string       `json:"id"`
-	Email          string       `json:"email"`
-	CounterRequest int64        `json:"counter_request"`
-	CreatedAt      sql.NullTime `json:"created_at"`
-}
-
-type Organization struct {
-	ID                     string         `json:"id"`
-	Name                   string         `json:"name"`
-	Description            sql.NullString `json:"description"`
-	HolderAccount          int64          `json:"holder_account"`
-	HolderAccountEvaluator int64          `json:"holder_account_evaluator"`
-	ProgramType            string         `json:"program_type"`
-	Logo                   sql.NullString `json:"logo"`
-	CreatedAt              time.Time      `json:"created_at"`
-	UpdatedAt              time.Time      `json:"updated_at"`
+	ID           string       `json:"id"`
+	Email        string       `json:"email"`
+	PasswordHash string       `json:"password_hash"`
+	CreatedAt    sql.NullTime `json:"created_at"`
 }
 
 type Profile struct {

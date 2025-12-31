@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/pressly/goose/v3"
+	"github.com/tursodatabase/go-libsql"
 )
 
 func DevelopmentSettings(r chi.Router) {
@@ -141,11 +143,24 @@ func OpenDB() (*sql.DB, error) {
 	}
 
 	// The DSN format for enabling WAL mode
-	dsn := "file:" + dbFile + "?_journal_mode=WAL"
-	db, err := sql.Open("sqlite3", dsn)
+	// dsn := "file:" + dbFile + "?_pragma=journal_mode=WAL&busy_timeout=5000&synchronous=NORMAL&foreign_keys=ON"
+	// db, err := sql.Open("sqlite3", dsn)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	connector, err := libsql.NewEmbeddedReplicaConnector(
+		dbFile,
+		"", // Primary URL (empty for local-only)
+		// "", // Auth token (empty for local-only)
+	)
+
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
+
+	// Open the database using the standard library
+	db := sql.OpenDB(connector)
 
 	// Set goose dialect to sqlite3
 	goose.SetDialect("sqlite3")

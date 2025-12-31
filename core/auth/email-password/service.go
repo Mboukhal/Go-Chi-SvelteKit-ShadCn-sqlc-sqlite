@@ -1,4 +1,4 @@
-package magiclink
+package emailpassword
 
 import (
 	"context"

@@ -2,15 +2,11 @@
 
 
 -- name: GetTokenByEmail :one
-SELECT id, counter_request, created_at
+SELECT id, created_at
 FROM loginpl
 WHERE email = ?
 LIMIT 1;
 
--- name: UpdateTokenCount :one
-UPDATE loginpl SET counter_request = counter_request + 1    
-WHERE email = ?
-RETURNING id;
 
 -- name: CreateToken :one
 INSERT INTO loginpl (email)

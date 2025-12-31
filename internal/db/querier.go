@@ -15,7 +15,6 @@ type Querier interface {
 	DeleteTokenByEmail(ctx context.Context, email string) error
 	// Session management
 	GetTokenByEmail(ctx context.Context, email string) (GetTokenByEmailRow, error)
-	UpdateTokenCount(ctx context.Context, email string) (string, error)
 }
 
 var _ Querier = (*Queries)(nil)

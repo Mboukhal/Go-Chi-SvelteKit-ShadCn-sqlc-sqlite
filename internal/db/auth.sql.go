@@ -36,35 +36,21 @@ func (q *Queries) DeleteTokenByEmail(ctx context.Context, email string) error {
 const getTokenByEmail = `-- name: GetTokenByEmail :one
 
 
-SELECT id, counter_request, created_at
+SELECT id, created_at
 FROM loginpl
 WHERE email = ?
 LIMIT 1
 `
 
 type GetTokenByEmailRow struct {
-	ID             string       `json:"id"`
-	CounterRequest int64        `json:"counter_request"`
-	CreatedAt      sql.NullTime `json:"created_at"`
+	ID        string       `json:"id"`
+	CreatedAt sql.NullTime `json:"created_at"`
 }
 
 // Session management
 func (q *Queries) GetTokenByEmail(ctx context.Context, email string) (GetTokenByEmailRow, error) {
 	row := q.db.QueryRowContext(ctx, getTokenByEmail, email)
 	var i GetTokenByEmailRow
-	err := row.Scan(&i.ID, &i.CounterRequest, &i.CreatedAt)
+	err := row.Scan(&i.ID, &i.CreatedAt)
 	return i, err
-}
-
-const updateTokenCount = `-- name: UpdateTokenCount :one
-UPDATE loginpl SET counter_request = counter_request + 1    
-WHERE email = ?
-RETURNING id
-`
-
-func (q *Queries) UpdateTokenCount(ctx context.Context, email string) (string, error) {
-	row := q.db.QueryRowContext(ctx, updateTokenCount, email)
-	var id string
-	err := row.Scan(&id)
-	return id, err
 }

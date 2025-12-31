@@ -13,7 +13,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -27,7 +26,7 @@ func main() {
 	if app_env == "" {
 		app_env = "production"
 	}
-	
+
 	errenv := godotenv.Load()
 	if errenv != nil {
 		fmt.Println("Error loading .env file")
@@ -41,7 +40,6 @@ func main() {
 
 	// Create queries instance
 	queries := sqlc.New(db)
-
 
 	// // insert a test user
 	// _, err = queries.CreateProfile(ctx, CreateProfileParams{
